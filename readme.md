@@ -1,49 +1,149 @@
-# Authenticity Validator for Academia
+# Authenticity Validator for Academia (SIH'25)
 
-This project was developed by me and my amazing team as part of SIH (Smart India Hackathon) internal assessment conducted by our college.
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Node](https://img.shields.io/badge/node-%3E%3D18-green.svg)
+![React](https://img.shields.io/badge/react-19.1.1-blue.svg)
+![Hardhat](https://img.shields.io/badge/hardhat-2.26.2-yellow.svg)
 
----
-
-## Problem Statement
-
-**Problem Statement ID:** 25029  
-**Title:** Authenticity Validator for Academia
-
-### Background
-
-With increasing digitization, the problem of fake degrees and forged academic certificates has become a major concern for higher education institutions, employers, and government bodies. Cases of fraudulent documents being used for jobs, admissions, or government schemes have highlighted the absence of a robust mechanism to verify the authenticity of educational credentials issued by colleges and universities.
-
-At present, verification is often manual, relying on physical inspection, emails to institutions, or outdated databases. This creates delays, inconsistency, and susceptibility to corruption or manipulation. To preserve academic integrity and public trust, there is a pressing need for an efficient, secure, and scalable digital system to detect and prevent the use of fake degrees.
-
-### Detailed Description
-
-The challenge is to create a digital platform that can authenticate and detect fake degrees or certificates issued by higher education institutions across Jharkhand. The system should be able to cross-verify uploaded documents (PDFs, scans, etc.) with institutional databases or credential registries, using metadata, QR codes, signatures, or embedded hashes.
-
-Such a platform must work with both legacy certificates (issued before digitization) and new ones generated under university ERP systems. It should detect anomalies such as:
-- Tampered grades or photos
-- Forged seals or signatures
-- Invalid certificate numbers
-- Non-existent institutions or courses
-- Duplicate or cloned documents
-
-Incorporating AI, OCR (Optical Character Recognition), and blockchain or cryptographic validation, the platform should enable seamless certificate verification by employers, admission offices, scholarship agencies, and government departments. The goal is to create a trustable and publicly accessible system that protects institutions’ reputation and safeguards student achievements.
-
-### Expected Solution
-
-A smart, scalable, and secure Fake Degree/Certificate Recognition system that includes:
-- Upload interface for verifying entities (employers, institutions, agencies) to upload or input certificate details
-- Certificate authenticity checker that:
-   - Uses OCR to extract key details (name, roll number, marks, certificate ID)
-   - Matches it against a verified database (centralized or decentralized)
-   - Flags mismatches or formatting inconsistencies
-- Digital watermark or blockchain verification support for newly issued certificates
-- Institution integration module for universities/colleges to upload their certificate records in bulk or in real-time
-- Admin dashboard for authorized bodies (e.g., Higher Education Department) to monitor verification activity, detect forgery trends, and blacklist offenders
-- Alert system for invalid or forged entries
-- Data privacy and access control measures to ensure secure handling of student information
-
-This solution must be adaptable across different institutions, work with both physical and digital certificates, and be affordable for state-wide rollout.
+A comprehensive digital platform developed for the **Smart India Hackathon 2025** to detect fake degrees and forged academic certificates. This system combines **Optical Character Recognition (OCR)** for physical document scanning and **Blockchain technology** for tamper-proof digital verification.
 
 ---
 
-**Developed as part of my SIH internal assessment.**
+## 🚀 Key Features
+
+-   **Hybrid Verification**: Validates both physical certificates (via OCR) and digital records (via Blockchain hash).
+-   **Tamper-Proof Ledger**: Stores certificate hashes on a decentralized blockchain network, ensuring immutable records.
+-   **Dual-Role Dashboard**: tailored interfaces for **Institutions** (to issue/upload records) and **Verifiers** (employers/agencies to check credentials).
+-   **Bulk Upload**: Institutions can upload multiple student records simultaneously.
+-   **OCR Integration**: automatically extracts Name, Roll Number, and Marks from scanned certificate images.
+-   **Secure Storage**: Uses IPFS for decentralized storage of certificate metadata and files.
+
+---
+
+## 🏗 System Architecture
+
+```mermaid
+graph TD
+    user["User (Verifier)"] -->|Uploads Scan| frontend["Frontend (React)"]
+    frontend -->|Sends Image| backend["Backend API (Express)"]
+    backend -->|Extracts Data| ocr["OCR Engine (Tesseract.js/Python)"]
+    backend -->|Fetches Hash| blockchain["Blockchain Network (Hardhat)"]
+    
+    institution["Institution"] -->|Issues Certificate| frontend
+    frontend -->|Submit Data| backend
+    backend -->|Store File| ipfs["IPFS Storage"]
+    backend -->|Record Hash| blockchain
+    
+    blockchain -- "Valid/Invalid" --> backend
+    backend -- "Verification Report" --> frontend
+    frontend -- "Result Display" --> user
+```
+
+---
+
+## 🛠 Tech Stack
+
+### **Frontend**
+-   **Framework**: [React](https://react.dev/) (Vite)
+-   **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
+-   **State Management**: React Hooks
+
+### **Backend**
+-   **Runtime**: [Node.js](https://nodejs.org/)
+-   **Framework**: [Express.js](https://expressjs.com/)
+-   **Blockchain**: Hardhat (Local Ethereum Network)
+-   **Contract Language**: Solidity
+-   **Storage**: IPFS (InterPlanetary File System)
+-   **Utilities**: Multer (File Uploads), Axios
+
+---
+
+## 🏁 Getting Started
+
+### Prerequisites
+-   **Node.js** (v18+)
+-   **npm**
+-   **MetaMask** (Optional for browser interaction)
+
+### Option 1: Manual Setup 🛠️
+
+#### 1. Start the Blockchain Node
+```bash
+cd Backend
+npm install
+npx hardhat node
+```
+*Keep this terminal running to maintain the local blockchain network.*
+
+#### 2. Deploy Contracts & Start Backend
+Open a new terminal:
+```bash
+cd Backend
+# The server script handles contract deployment on start
+npm start
+# OR
+node server.js
+```
+The server will run on `http://localhost:3001` and deploy the smart contract to your local node.
+
+#### 3. Start the Frontend
+Open a third terminal:
+```bash
+cd front-end
+npm install
+npm run dev
+```
+Access the application at `http://localhost:5173`.
+
+---
+
+## 📖 Usage Guide
+
+### 1. For Institutions (Issuers)
+1.  Log in to the Institution Dashboard.
+2.  Navigate to **Issue Certificate**.
+3.  Fill in student details or upload a bulk CSV/Excel file.
+4.  Click **Issue**. The system generates a hash and stores it on the blockchain.
+
+### 2. For Verifiers (Employers)
+1.  Go to the **Verify** page.
+2.  Upload a scanned copy of the certificate OR enter the unique Certificate ID.
+3.  The system uses OCR to read the scan and checks the extracted data against the blockchain records.
+4.  **Result**: Instant feedback on whether the certificate is "Authentic" or "Not Found/Forged".
+
+---
+
+## 📂 Project Structure
+
+```bash
+Authenticity-Validator-for-Academia-SIH25/
+├── Backend/
+│   ├── Contracts/       # Solidity Smart Contracts
+│   ├── Services/        # Business logic & Blockchain interaction
+│   ├── Routes/          # API Routes (Auth, Issues, Verify)
+│   ├── Model/           # Data Models
+│   └── server.js        # Entry point
+├── front-end/
+│   ├── src/             # React application source
+│   ├── public/          # Static assets
+│   └── vite.config.js   # Vite configuration
+└── README.md            # You are here
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please fork the repository and create a pull request with your changes.
+
+1.  Fork the Project
+2.  Create your Feature Branch
+3.  Commit your Changes
+4.  Push to the Branch
+5.  Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
